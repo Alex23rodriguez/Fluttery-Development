@@ -7,14 +7,7 @@ class Queen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   margin: EdgeInsets.all(4),
-    //   child: CircleAvatar(
-    //     backgroundColor: color,
-    //   ),
-    // );
     return LayoutBuilder(builder: (context, constraints) {
-      print(constraints.maxHeight);
       return Stack(
         children: <Widget>[
           Container(

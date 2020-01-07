@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import './cell.dart';
 
-double boardSize;
-
 class Board extends StatefulWidget {
   static const int size = 8;
 
@@ -51,17 +49,18 @@ class _BoardState extends State<Board> {
         x = Colors.black;
         break;
       case 1:
-        x = Colors.purple;
+        //x = Colors.purple;
+        x = Colors.white;
         break;
       case 2:
-        x = Colors.purple[800];
+        //x = Colors.purple[800];
+        x = Colors.grey[350];
         break;
       case -1:
         x = Colors.red;
         break;
       case -2:
         x = Colors.red[900];
-        //x = Color.fromRGBO(200, 0, 0, 1);
         break;
       default:
         x = null;

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import './board.dart';
 
+double screenSize;
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,17 +16,13 @@ class MyApp extends StatelessWidget {
           title: Text("Game of the Amazons"),
         ),
         body: LayoutBuilder(builder: (context, constraints) {
-          boardSize = min(constraints.maxHeight, constraints.maxWidth);
-          print('board size updated!');
-          print(boardSize);
-          //boardSize = min(MediaQuery.of(context).size.height.floor(),
-          //        MediaQuery.of(context).size.width.floor())
-          //    .toDouble();
+          screenSize = min(constraints.maxHeight, constraints.maxWidth);
           List<Widget> layout = [
-            Container(height: boardSize, width: boardSize, child: new Board()),
-            RaisedButton(
-              onPressed: () {},
-            ),
+            Container(
+                height: screenSize, width: screenSize, child: new Board()),
+            //RaisedButton(
+            //  onPressed: () {},
+            //),
           ];
           return MediaQuery.of(context).orientation == Orientation.landscape
               ? Row(

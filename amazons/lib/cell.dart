@@ -31,7 +31,7 @@ class Cell extends StatelessWidget {
           color: (id % Board.size + (id / Board.size).floor()) % 2 == 0
               ? Colors.green
               : Colors.white,
-          child: _child), //Text('$id')),
+          child: _child),
     );
   }
 }
