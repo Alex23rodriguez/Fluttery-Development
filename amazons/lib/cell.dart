@@ -5,20 +5,22 @@ import 'arrow.dart';
 import 'board.dart';
 
 class Cell extends StatelessWidget {
+  static const int size = 8;
+
   final int id;
-  final int state;
+  final Color color;
   final Function callback;
 
-  Cell(this.id, this.state, this.callback);
+  Cell(this.id, this.color, this.callback);
 
   get _child {
-    if (state == 0) {
+    if (color == null) {
       return null;
     }
-    if (state == -1) {
+    if (color == Colors.black) {
       return Arrow();
     }
-    return Queen(state);
+    return Queen(color);
   }
 
   @override

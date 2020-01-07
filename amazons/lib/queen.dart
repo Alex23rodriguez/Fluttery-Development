@@ -13,13 +13,25 @@ class Queen extends StatelessWidget {
     //     backgroundColor: color,
     //   ),
     // );
-    return Container(
-      margin: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(60),
-        color: color,
-      ),
+    return Stack(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(1000),
+            color: color,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(1000),
+            color: color,
+          ),
+        )
+      ],
     );
   }
 }
