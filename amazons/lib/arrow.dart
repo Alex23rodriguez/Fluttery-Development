@@ -5,7 +5,7 @@ class Arrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        margin: EdgeInsets.all(constraints.maxHeight * 0.25),
+        margin: EdgeInsets.all(constraints.maxHeight * 0.2),
         child: CircleAvatar(
           backgroundColor: Colors.black,
         ),

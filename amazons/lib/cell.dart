@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 
 import './queen.dart';
-import 'arrow.dart';
-import 'board.dart';
+import './arrow.dart';
 
 class Cell extends StatelessWidget {
-  static const int size = 8;
-
   final int id;
-  final Color color;
+  final Color cElem;
+  final Color cCell;
   final Function callback;
 
-  Cell(this.id, this.color, this.callback);
+  Cell(this.id, this.cElem, this.cCell, this.callback);
 
   get _child {
-    if (color == null) {
+    if (cElem == null) {
       return null;
     }
-    if (color == Colors.black) {
+    if (cElem == Colors.black) {
       return Arrow();
     }
-    return Queen(color);
+    return Queen(cElem);
   }
 
   @override
@@ -28,10 +26,37 @@ class Cell extends StatelessWidget {
     return GestureDetector(
       onTap: () => callback(id),
       child: Container(
-          color: (id % Board.size + (id / Board.size).floor()) % 2 == 0
-              ? Colors.green
-              : Colors.white,
-          child: _child),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          color: cCell,
+        ),
+        child: _child,
+      ),
+    );
+  }
+}
+
+class HighlightedCell extends StatelessWidget {
+  final int id;
+  final Color c;
+  final Function callback;
+
+  HighlightedCell(this.id, this.c, this.callback);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => callback(id),
+      child: Container(
+        padding: EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          color: c,
+        ),
+        child: Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        ),
+      ),
     );
   }
 }

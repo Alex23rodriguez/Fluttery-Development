@@ -1,96 +1,147 @@
 import 'package:flutter/material.dart';
+
+import './colors.dart';
 import './cell.dart';
 
 class Board extends StatefulWidget {
-  static const int size = 8;
-
+  final List<int> cells;
+  final int boardSize;
+  Board(this.cells, this.boardSize);
   @override
   _BoardState createState() => _BoardState();
 }
 
 class _BoardState extends State<Board> {
   int selected;
-  List<int> cells = init;
+  int turn = 0; //0: white moves. 1: white places. 2: red moves. 3: red places
 
-  static get init {
-    List<int> cells = List.generate(Board.size * Board.size, (i) => null);
-    List<int> t1;
-    List<int> t2;
-    if (Board.size == 6) {
-      t1 = [3, 12];
-      t2 = [23, 32];
-    } else if (Board.size == 8) {
-      t1 = [3, 16, 23];
-      t2 = [40, 47, 60];
-    } else if (Board.size == 10) {
-      t1 = [3, 6, 30, 39];
-      t2 = [60, 69, 93, 96];
-    } else {
-      t1 = [];
-      t2 = [];
+  void _tapped(i) {
+    if (turn % 2 == 0 && widget.cells[i] != null && widget.cells[i].abs() > 0) {
+      setState(() {
+        selected = selected == i ? null : i;
+      });
     }
-
-    for (int i = 0; i < t1.length; i++) {
-      cells[t1[i]] = 1;
-      cells[t2[i]] = -1;
-    }
-    return cells;
   }
 
-  Color colors(i) {
-    if (i == selected) {
-      i = cells[i] * 2;
-    } else {
-      i = cells[i];
-    }
-    Color x;
-    switch (i) {
-      case 0:
-        x = Colors.black;
-        break;
-      case 1:
-        //x = Colors.purple;
-        x = Colors.white;
-        break;
-      case 2:
-        //x = Colors.purple[800];
-        x = Colors.grey[350];
-        break;
-      case -1:
-        x = Colors.red;
-        break;
-      case -2:
-        x = Colors.red[900];
-        break;
-      default:
-        x = null;
-    }
-    return x;
+  void _tappedHL(i) {
+    setState(() {
+      if (turn % 2 == 0) {
+        widget.cells[i] = widget.cells[selected];
+        widget.cells[selected] = null;
+        selected = i;
+      } else {
+        widget.cells[i] = 0;
+        selected = null;
+      }
+    });
+    turn = 1 - turn;
   }
 
+  List<int> _coords(int i) {
+    return [i % widget.boardSize, (i / widget.boardSize).floor()];
+  }
+
+  int _toid(int x, int y) {
+    return y * widget.boardSize + x;
+  }
+
+  List<int> get _validMoves {
+    List<int> hl = [];
+    if (selected != null) {
+      List<int> c = _coords(selected);
+
+      int i = c[0] - 1;
+      //left
+      while (i >= 0 && widget.cells[_toid(i, c[1])] == null) {
+        hl.add(_toid(i, c[1]));
+        i -= 1;
+      }
+      i = c[0] + 1;
+      //right
+      while (i < widget.boardSize && widget.cells[_toid(i, c[1])] == null) {
+        hl.add(_toid(i, c[1]));
+        i += 1;
+      }
+      //up
+      i = c[1] - 1;
+      while (i >= 0 && widget.cells[_toid(c[0], i)] == null) {
+        hl.add(_toid(c[0], i));
+        i -= 1;
+      }
+      i = c[1] + 1;
+      //down
+      while (i < widget.boardSize && widget.cells[_toid(c[0], i)] == null) {
+        hl.add(_toid(c[0], i));
+        i += 1;
+      }
+      //ul
+      i = 1;
+      while (c[0] - i >= 0 &&
+          c[1] - i >= 0 &&
+          widget.cells[_toid(c[0] - i, c[1] - i)] == null) {
+        hl.add(_toid(c[0] - i, c[1] - i));
+        i += 1;
+      }
+      //ur
+      i = 1;
+      while (c[0] + i < widget.boardSize &&
+          c[1] - i >= 0 &&
+          widget.cells[_toid(c[0] + i, c[1] - i)] == null) {
+        hl.add(_toid(c[0] + i, c[1] - i));
+        i += 1;
+      }
+      //dl
+      i = 1;
+      while (c[0] - i >= 0 &&
+          c[1] + i < widget.boardSize &&
+          widget.cells[_toid(c[0] - i, c[1] + i)] == null) {
+        hl.add(_toid(c[0] - i, c[1] + i));
+        i += 1;
+      }
+      //dr
+      i = 1;
+      while (c[0] + i < widget.boardSize &&
+          c[1] + i < widget.boardSize &&
+          widget.cells[_toid(c[0] + i, c[1] + i)] == null) {
+        hl.add(_toid(c[0] + i, c[1] + i));
+        i += 1;
+      }
+    }
+    return hl;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<int> moves = _validMoves;
+    return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      crossAxisCount: widget.boardSize,
+      children: List.generate(
+        widget.boardSize * widget.boardSize,
+        (i) => moves.indexOf(i) == -1
+            ? Cell(i, colorElem(widget.cells[i], i == selected),
+                colorCell(i, widget.boardSize), _tapped)
+            : HighlightedCell(i, colorCell(i, widget.boardSize), _tappedHL),
+      ),
+    );
+  }
+}
+
+/*
   void _tapped(int i) {
-    int x = cells[i];
+    int x = widget.cells[i];
     setState(() {
       if (x != null && x.abs() > 0) {
         // Tapped on a queen
         selected = i == selected ? null : i;
       } else if (selected != null) {
         // Move queen
-        cells[i] = cells[selected];
-        cells[selected] = null;
+        widget.cells[i] = widget.cells[selected];
+        widget.cells[selected] = null;
         selected = null;
       } else
         // place/delete arrow
-        cells[i] = cells[i] == 0 ? null : 0;
+        widget.cells[i] = widget.cells[i] == 0 ? null : 0;
     });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: Board.size,
-      children: List.generate(
-          Board.size * Board.size, (i) => Cell(i, colors(i), _tapped)),
-    );
-  }
-}
+  */
