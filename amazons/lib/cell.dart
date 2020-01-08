@@ -48,7 +48,7 @@ class HighlightedCell extends StatelessWidget {
     return GestureDetector(
       onTap: () => callback(id),
       child: Container(
-        padding: EdgeInsets.all(3),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black),
           color: c,
