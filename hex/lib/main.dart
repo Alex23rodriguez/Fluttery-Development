@@ -1,11 +1,10 @@
-import 'dart:math' show min;
+import 'dart:math' show pi;
 
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,25 +13,17 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            // double r = constraints.maxWidth / 25;
-            return Container(
-              // Container(
-              //   child: GestureDetector(
-              //     onTap: () {
-              //       print('tip');
-              //     },
-              //     child: CustomPaint(
-              //         size: Size(100, 100), painter: DrawTriangle()),
-              //   ),
-              // ),
-              child: Hex(
-                3,
-                constraints.maxHeight,
-                constraints.maxWidth,
+            return Center(
+              child: Container(
+                child: Transform.rotate(
+                  angle: pi / 6,
+                  child: Hex(
+                    11,
+                    constraints.maxHeight,
+                    constraints.maxWidth,
+                  ),
+                ),
               ),
-              // child: OffGrid((x, s) {
-              //   return Circle(x, s);
-              // }, [r, 0], r, 0, 11, 11),
             );
           },
         ),
@@ -76,46 +67,6 @@ class Hex extends StatelessWidget {
   }
 }
 
-class OffGrid extends StatelessWidget {
-  Function func;
-  List args;
-  double dx;
-  double dy;
-  int x;
-  int y;
-  OffGrid(this.func, this.args, this.dx, this.dy, this.x, this.y);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(y, (i) {
-          Row r = Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(x, (_) {
-              return Function.apply(func, args);
-            }),
-          );
-          if (i % 2 == 0) {
-            return r;
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(x + 1, (_) {
-              return Function.apply(func, args);
-            }),
-          );
-          //return Transform.translate(
-          //  offset: Offset(dx, dy),
-          //   child: r,
-          // );
-        }),
-      ),
-    );
-  }
-}
-
 class Circle extends StatefulWidget {
   final double radius;
   int state;
@@ -137,7 +88,7 @@ class _CircleState extends State<Circle> {
               });
             },
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.symmetric(horizontal: 4),
               height: widget.radius * 2,
               width: widget.radius * 2,
               decoration: BoxDecoration(
@@ -150,7 +101,7 @@ class _CircleState extends State<Circle> {
             ),
           )
         : Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
+            margin: EdgeInsets.symmetric(horizontal: 4),
             height: widget.radius * 2,
             width: widget.radius * 2,
             decoration: BoxDecoration(
@@ -161,30 +112,5 @@ class _CircleState extends State<Circle> {
               border: Border.all(color: Colors.black),
             ),
           );
-  }
-}
-
-class DrawTriangle extends CustomPainter {
-  Paint _paint;
-
-  DrawTriangle() {
-    _paint = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.fill;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var path = Path();
-    path.moveTo(size.width / 2, 0);
-    path.lineTo(0, size.height);
-    path.lineTo(size.height, size.width);
-    path.close();
-    canvas.drawPath(path, _paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
